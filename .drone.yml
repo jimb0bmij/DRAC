@@ -1,0 +1,3 @@
+image: ansible/centos7-ansible
+script:
+    - python travis_parse_yaml.py isoplay.yml powerplay.yml

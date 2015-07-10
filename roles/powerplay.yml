@@ -1,0 +1,13 @@
+---
+
+- hosts: DRAC
+  gather_facts: no
+
+  roles: 
+  - dracpower
+
+
+
+
+
+

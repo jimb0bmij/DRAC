@@ -1,0 +1,8 @@
+---
+
+
+  - name: set_power_state
+    remote_user: "{{ drac_ssh_user }}"
+    raw: racadm serveraction "{{ powerstate }}"
+
+

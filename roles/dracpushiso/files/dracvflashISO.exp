@@ -1,0 +1,29 @@
+#!/usr/bin/expect -f
+set pass [lrange $argv 0 0]
+set server [lrange $argv 1 1]
+set name [lrange $argv 2 2]
+set part [lrange $argv 3 3]
+set label [lrange $argv 4 4]
+set location [lrange $argv 5 5]
+set timeout 30
+
+spawn ssh -o StrictHostKeyChecking=no $name@$server
+match_max 100000
+expect "*?assword:*"
+send -- "$pass\r"
+send -- "\r"
+
+expect "*>*"
+
+send -- "racadm vflashpartition create -i $part -o $label -e cddvd -t image -l '$location' -u $name -p $password \r"
+
+expect "*Partition image upload in progress.*"
+
+sleep 5
+
+
+send -- "exit\r"
+
+
+
+

@@ -1,0 +1,12 @@
+---
+
+- hosts: DRAC
+  gather_facts: no
+
+  vars:
+    part: "2"
+    label: "CD"
+    location: "10.10.10.10:/ISOS/cd.iso"
+
+  roles: 
+  - dracpushiso

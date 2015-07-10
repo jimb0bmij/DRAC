@@ -1,0 +1,16 @@
+---
+
+  - name: check power state
+    remote_user: "{{ drac_ssh_user }}"
+    raw: racadm serveraction "{{ powerstate }}"
+    register: idrac
+  - debug: var=idrac.stdout_lines
+
+  - name: powerstate
+    changed_when: idrac.stdout | search("already") != 1 and idrac.stdout | search("Server power operation successful") == 1
+    set_fact: state="{{ powerstate }}"
+    notify: set_power_state
+
+
+
+

@@ -1,0 +1,14 @@
+---
+
+  - name: check vflash
+    remote_user: "{{ drac_ssh_user }}"
+    raw: racadm vflashpartition list
+    register: vflash
+
+  - name: Push ISO via expect
+    remote_user: "{{ drac_ssh_user }}"
+    local_action: shell {{ role_path }}/files/dracvflashISO.exp {{ ansible_ssh_pass }} {{ inventory_hostname }} {{ drac_ssh_user }} {{ part }} {{ label }} {{ location }}
+    when: vflash.stdout | search("{{ label }}") != true
+    notify: check_ISO_completed
+
+

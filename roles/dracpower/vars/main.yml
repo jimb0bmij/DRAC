@@ -1,0 +1,11 @@
+---
+    drac_ssh_user: "root"
+    powerstate: "graceshutdown"
+
+#graceshutdown
+#powerdown
+#powerup
+#powercycle
+#hardreset
+#powerstatus
+

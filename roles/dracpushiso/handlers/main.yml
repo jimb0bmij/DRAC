@@ -1,0 +1,9 @@
+---
+
+  - name: check_ISO_completed
+    remote_user: "{{ drac_ssh_user }}"
+    raw: racadm vflashpartition status -i {{ part }}
+    register: test
+    until: test.stdout | search("100") 
+    delay: 10
+    retries: 100

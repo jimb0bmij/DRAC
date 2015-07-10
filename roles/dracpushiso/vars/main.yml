@@ -1,0 +1,5 @@
+---
+    drac_ssh_user: "root"
+#    part: "3"
+#    label: "DVD"
+#    location: "10.10.10.10:/ISOS/dvd.iso"

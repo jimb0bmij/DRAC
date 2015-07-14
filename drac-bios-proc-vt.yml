@@ -4,5 +4,4 @@
   - remote_user: root
     raw: racadm set BIOS.ProcSettings.ProcVirtualization Enabled
     register: ProcSet
-  failed_when: "'ERROR' in result.stdout or 'COMMAND PROCESSING FAILED' in result.stdout or 'error' in result.stdout or resul$
-
+    failed_when: "'ERROR' in result.stdout or 'COMMAND PROCESSING FAILED' in result.stdout or 'error' in result.stdout or result.rc != 0"

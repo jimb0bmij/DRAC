@@ -1,0 +1,34 @@
+---
+
+- hosts: DRAC
+  gather_facts: no
+  vars:
+  -  drac_ssh_user: "root"
+  -  powerstate: "graceshutdown"
+  tasks:
+
+  - name: check power state
+    remote_user: "{{ drac_ssh_user }}"
+    raw: racadm serveraction powerstatus
+    register: idrac
+
+
+  - debug: var=idrac.stdout_lines
+
+  - name: set power state
+    remote_user: "{{ drac_ssh_user }}"
+    raw: racadm serveraction "{{ powerstate }}"
+    register: idracp
+    changed_when: idracp.stdout | search("already") != 1 and idracp.stdout | search("Server power operation successful") == 1
+    failed_when: "'ERROR' in result.stdout or 'COMMAND PROCESSING FAILED' in result.stdout or 'error' in result.stdout or result.rc != 0"
+
+  - debug: var=idracp.stdout_lines
+
+
+#graceshutdown
+#powerdown
+#powerup
+#powercycle
+#hardreset
+#powerstatus
+

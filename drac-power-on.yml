@@ -1,0 +1,16 @@
+---
+
+- hosts: DRAC
+  gather_facts: no
+  vars:
+  -  drac_ssh_user: "root"
+  tasks:
+
+  - name: check power state
+    remote_user: "{{ drac_ssh_user }}"
+    raw: racadm serveraction powerstatus
+    register: idrac
+
+
+  - debug: var=idrac.stdout_lines
+

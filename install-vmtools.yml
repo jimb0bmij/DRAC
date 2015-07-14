@@ -1,0 +1,31 @@
+---
+
+- hosts: vms
+  remote_user: user
+  become: yes
+
+
+  tasks:
+
+  - name: Ensure 7z is present
+    apt: pkg=p7zip-full state=present
+
+  - name: Ensure needed packages are present
+    apt: pkg=build-essential,linux-headers-generic state=present  
+    when: ansible_distribution == "Ubuntu" 
+
+  - name: Extract VMwareTools
+    unarchive: dest=/home/user/ src={{ item }}
+    with_fileglob: /home/user/VMwareTools*.tar.gz
+
+  - name: Launch VMwareTools installation
+    command: /home/user/vmware-tools-distrib/vmware-install.pl -d
+    when: ansible_distribution=='Ubuntu' and ansible_product_name == "VMware Virtual Platform"
+
+  - name: Clean extracted folder
+    file: path={{ item }} state=absent
+    with_items: /home/user/vmware-tools-distrib
+
+  - name: Clean extracted folder
+    file: path={{item}} state=absent
+    with_fileglob: /home/user/manifest.txt /home/user/vmware-tools* /home/user/run_upgrader.sh

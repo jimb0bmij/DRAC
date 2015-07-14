@@ -1,0 +1,7 @@
+---
+
+- hosts: vms
+  tasks:
+  - name: Copy file vmtools
+    copy: src=/home/user/VMwareTools-9.0.11-1743336.tar.gz dest=/home/user/VMwareTools-9.0.11-1743336.tar.gz mode=0444
+    when: ansible_distribution=='Ubuntu' and ansible_product_name == "VMware Virtual Platform"

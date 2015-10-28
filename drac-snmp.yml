@@ -1,0 +1,22 @@
+---
+
+- hosts: DRAC
+  gather_facts: no
+  tasks:
+  - name: Set DRAC SNMP
+    remote_user: root
+    raw: racadm set iDRAC.SNMP.AgentCommunity "notpublic"
+    register: idracp
+    changed_when: idracp.stdout | search("already") != 1 and idracp.stdout | search("Object value modified successfully") == 1
+    failed_when: "'ERROR' in idracp.stdout or 'COMMAND PROCESSING FAILED' in idracp.stdout or 'error' in idracp.stdout or idracp.rc != 0"
+
+  - name: Get DRAC SNMP
+    remote_user: root
+    raw: racadm get iDRAC.SNMP.AgentCommunity 
+    register: idracpg
+    changed_when: idracpg.stdout | search("already") != 1 and idracpg.stdout | search("Object value modified successfully") == 1
+    failed_when: "'ERROR' in idracpg.stdout or 'COMMAND PROCESSING FAILED' in idracpg.stdout or 'error' in idracpg.stdout or idracp.rc != 0"
+
+  - debug: var=idracp.stdout_lines
+  - debug: var=idracpg.stdout_lines
+

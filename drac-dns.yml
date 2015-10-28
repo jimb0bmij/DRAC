@@ -1,0 +1,14 @@
+---
+
+- hosts: DRAC
+  gather_facts: no
+  tasks:
+  - name: Set DRAC DNS 
+    remote_user: root
+    raw: racadm set iDRAC.IPv4.DNS2 10.20.20.10
+    register: idracp
+    changed_when: idracp.stdout | search("already") != 1 and idracp.stdout | search("Object value modified successfully") == 1
+    failed_when: "'ERROR' in idracp.stdout or 'COMMAND PROCESSING FAILED' in idracp.stdout or 'error' in idracp.stdout or idracp.rc != 0"
+
+  - debug: var=idracp.stdout_lines
+

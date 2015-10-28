@@ -1,0 +1,16 @@
+---
+
+- hosts: DRAC
+  gather_facts: no
+  tasks:
+
+  - name: Set DRAC SMTP 
+    remote_user: root
+    raw: racadm set iDRAC.RemoteHosts.SMTPServerIPAddress 10.30.30.10
+    register: idracp
+    changed_when: idracp.stdout | search("already") != 1 and idracp.stdout | search("Object value modified successfully") == 1
+    failed_when: "'ERROR' in idracp.stdout or 'COMMAND PROCESSING FAILED' in idracp.stdout or 'error' in idracp.stdout or idracp.rc != 0"
+
+  - debug: var=idracp.stdout_lines
+
+

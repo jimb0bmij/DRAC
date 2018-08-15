@@ -1,0 +1,43 @@
+---
+# tasks file for dellrhelip
+
+
+
+#ServerPoweredOnTime=747
+
+#racadm get system.ServerOS.ServerPoweredOnTime
+
+- name: get os name from idrac (if failed system might have been installed before by this script)
+  raw: "racadm get system.serveros"
+  register: iresult100
+
+
+- pause:
+    minutes: 1
+
+- name: get os uptime from idrac
+  raw: "racadm get system.ServerOS.ServerPoweredOnTime"
+  ignore_errors: yes
+  register: iresult10
+  until: iresult10.stdout.split('=')[2]| int >= 240
+  retries: 120
+  delay: 30
+
+
+- debug: msg="{{ iresult10.stdout_lines }}"
+
+
+- name: set TEMP ip (won't remain after reboot)
+  local_action: command ./roles/dellrhelip/templates/install-rhel-dell-ip.exp {{ inventory_hostname }} {{ h }} {{ ip }} {{ sm }} {{ g }} {{ nic }} {{vault_root_idrac_pass}} {{vault_root_pass}}
+  ignore_errors: yes
+  register: bresult0
+  when: iresult100.stdout.find("rhel7template") != -1
+
+- debug: msg="{{ bresult0.stdout_lines }}"
+
+
+- pause:
+    minutes: 1
+
+
+# To return to the DRAC interface and disconnect from the console the default escape sequence is ^\ (CTRL+\)

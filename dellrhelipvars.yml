@@ -1,0 +1,6 @@
+---
+# vars file for dellrhelip
+#
+username_on_the_host: "{{ lookup('env', 'USER') }}"
+ansible_user: "root"
+ansible_ssh_pass: "calvin"

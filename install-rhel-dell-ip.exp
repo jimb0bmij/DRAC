@@ -1,0 +1,56 @@
+#!/usr/bin/expect -f
+#  ./ssh.exp password 192.168.1.11 id
+set name "root"
+set serverdrac [lrange $argv 0 0 ]
+set hostname [lrange $argv 1 1 ]
+set ip [lrange $argv 2 2 ]
+set sm [lrange $argv 3 3 ]
+set g [lrange $argv 4 4 ]
+set nic [lrange $argv 5 5 ]
+set pass [lrange $argv 6 6 ]
+set pass2 [lrange $argv 7 7 ]
+
+set timeout 5
+
+spawn ssh -o StrictHostKeyChecking=no $name@$serverdrac
+match_max 100000
+sleep 2
+expect "*?assword:*"
+send -- "$pass\r"
+#send -- "\r"
+
+sleep 2
+expect "*admin1*"
+sleep 2
+send -- "console com2\r"
+sleep 2
+send -- "\r"
+sleep 2
+expect "*login:*"
+sleep 2
+send -- "$name\r"
+sleep 2
+expect "*assword:*"
+send -- "$pass2\r"
+sleep 2
+expect "*#*"
+sleep 2
+send -- "hostnamectl set-hostname $hostname\r"
+sleep 2
+#send -- "cat > /etc/resolv.conf<<EOF
+#EOF
+#\r"
+#sleep 1
+send -- "ip addr add $ip/$sm dev $nic\r"
+#send -- "ip addr add $ip/25 dev em1\r"
+sleep 2
+send -- "ip link set $nic up\r"
+sleep 2
+send -- "ip route add default via $g dev $nic\r"
+sleep 2
+send -- "exit\r"
+sleep 2
+send "\x1c"
+send "\x28"
+sleep 2
+send -- "exit\r"
